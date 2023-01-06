@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="index.js" defer></script>
+    <title>Document</title>
+</head>
+
+<body class="px-2">
+    <div class="flex flex-col justify-center items-center gap-y-10 pt-10">
+        <h1 class="uppercase">Drawing prompts Randomizer</h1>
+        <p>Click buttons to get prompts!</p>
+        <p>By Mimimoo Illustrations</p>
+        <div class="w-full md:w-1/2 md:m-auto grid grid-cols-2 gap-y-4">
+            <button id="character"
+                class="p-4 bg-pink-300 hover:bg-pink-500 hover:text-white active:border focus:border">Character</button>
+            <p class="character-output p-4 text-center border">?</p>
+            <button id="environment"
+                class="p-4 bg-pink-300 hover:bg-pink-500 hover:text-white active:border focus:border">Environment</button>
+
+            <p class="environment-output p-4 text-center border">?</p>
+            <button id="accessories"
+                class="p-4 bg-pink-300 hover:bg-pink-500 hover:text-white active:border focus:border">Accessories</button>
+            <p class="accessories-output p-4 text-center border">?</p>
+            <button id="friends"
+                class="p-4 bg-pink-300 hover:bg-pink-500 hover:text-white active:border focus:border">Friend</button>
+            <p class="friends-output p-4 text-center border">?</p>
+        </div>
+        <button id="reset" class="px-6 py-2 bg-teal-500 hover:text-white hover:bg-teal-600">reset</button>
+
+    </div>
+</body>
+
+</html>
