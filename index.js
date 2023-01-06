@@ -8,7 +8,7 @@ const ACCESSORIES = [
     'straw hat', 'dangly earrings', 'sunflower', 'flower crown', 'camera', 'map', 'binoculars', 'backpack', 'stripey shirt', 'colorful earrings', 'apron', 'crown', 'sweets', 'cute hat', 'cup of coffee', 'candle', 'bouquet', 'plant', 'mushroom', 'seashells', 'love hearts', 'tattoo', 'rings', 'bum bag', 'sparklers', 'round glasses', 'patterned shirt', 'fancy bracelet', 'art supplies', 'tea cup', 'picnic basket', 'hairclips', 'sunglasses', 'necklace', 'telescope', 'strawberries', 'biscuits', 'balloon', 'blanket', 'teapot', 'bow', 'envelope', 'watch', 'gloves', 'cake', 'raincoat', 'bucket hat', 'starry jewellery', 'bubble gum', 'book'
 ]
 const FRIENDS = [
-    'ladybug', 'bumblebee', 'beetle', 'firefly', 'angry cat', 'dragonfly', 'caterpillar', 'bunny', 'goose', 'puppy', 'grasshopper', 'owl', 'teddy', 'moth', 'chicken', 'seagull', 'fox', 'kitten', 'lamb', 'sloth', 'happy cat', 'gecko', 'blackbird', 'sercious cat', 'snail', 'duck', 'butterfly', 'bird', 'little dog', 'hedgehog', 'hamster', 'squirell', 'worm', 'spider', 'frog', 'mouse', 'friendly flower', 'piglet', 'budgie', 'fairy', 'turtle', 'goat', 'toad', 'wombat', 'swan', 'sleeping hedgehog', 'pigeon', 'robin bird', 'bug', 'silly dog'
+    'ladybug', 'bumblebee', 'beetle', 'firefly', 'angry cat', 'dragonfly', 'caterpillar', 'bunny', 'goose', 'puppy', 'grasshopper', 'owl', 'teddy', 'moth', 'chicken', 'seagull', 'fox', 'kitten', 'lamb', 'sloth', 'happy cat', 'gecko', 'blackbird', 'serious cat', 'snail', 'duck', 'butterfly', 'bird', 'little dog', 'hedgehog', 'hamster', 'squirell', 'worm', 'spider', 'frog', 'mouse', 'friendly flower', 'piglet', 'budgie', 'fairy', 'turtle', 'goat', 'toad', 'wombat', 'swan', 'sleeping hedgehog', 'pigeon', 'robin bird', 'bug', 'silly dog'
 ]
 
 const characterBtn = document.getElementById('character')
@@ -17,11 +17,14 @@ const accessoriesBtn = document.getElementById('accessories')
 const friendsBtn = document.getElementById('friends')
 const resetBtn = document.getElementById('reset')
 const randomizeAllBtn = document.getElementById('randomizeAll')
+const confirmBtn = document.getElementById('confirm')
 
 const characterOutput = document.querySelector('.character-output')
 const environmentOutput = document.querySelector('.environment-output')
 const accessoriesOutput = document.querySelector('.accessories-output')
 const friendsOutput = document.querySelector('.friends-output')
+const results = document.getElementById('results')
+const historyOutput = document.getElementById('history')
 
 function random_item(items) {
     return items[Math.floor(Math.random() * items.length)];
@@ -37,50 +40,55 @@ const createTimer = (cb, delay) => {
 }
 
 let timers = []
+const historyStorage = JSON.parse(localStorage.getItem('history') || '[]')
+
+historyStorage.forEach((line) => {
+    historyOutput.innerHTML = `<div>${line}</div>` + historyOutput.innerHTML
+})
 
 const spinnerTime = 500
 
-const characterOnclick =  () => {
+const characterOnclick = () => {
     characterOutput.innerHTML = spinner()
     createTimer(() => {
         characterOutput.textContent = random_item(CHARACTERS)
-      }, spinnerTime)
+    }, spinnerTime)
 }
 
 const environmentOnclick = () => {
     environmentOutput.innerHTML = spinner()
-    createTimer(() => {    
+    createTimer(() => {
         environmentOutput.textContent = random_item(ENVIRONMENT)
-      }, spinnerTime)
-
+    }, spinnerTime)
 }
 
 const accessoriesOnclick = () => {
     accessoriesOutput.innerHTML = spinner()
     createTimer(() => {
         accessoriesOutput.textContent = random_item(ACCESSORIES)
-      }, spinnerTime)
-
+    }, spinnerTime)
 }
 
 const friendsOnclick = () => {
     friendsOutput.innerHTML = spinner()
     createTimer(() => {
         friendsOutput.textContent = random_item(FRIENDS)
-      }, spinnerTime)
-
+    }, spinnerTime)
 }
 
 
 characterBtn.addEventListener('click', characterOnclick)
-
 environmentBtn.addEventListener('click', environmentOnclick)
-
 accessoriesBtn.addEventListener('click', accessoriesOnclick)
-
 friendsBtn.addEventListener('click', friendsOnclick)
 
+
 randomizeAllBtn.addEventListener('click', () => {
+    if (characterOutput.textContent != '?') {
+        const resultOutput = `${characterOutput.textContent} || ${environmentOutput.textContent} || ${accessoriesOutput.textContent} || ${friendsOutput.textContent}`
+        results.innerHTML = `<div>${resultOutput}</div>` + results.innerHTML
+    }
+
     characterOnclick()
     createTimer(environmentOnclick, spinnerTime)
     createTimer(accessoriesOnclick, spinnerTime * 2)
@@ -90,8 +98,18 @@ randomizeAllBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
     timers.forEach(clearTimeout)
     timers = []
-     characterOutput.textContent = '?'
-     environmentOutput.textContent = '?'
-     accessoriesOutput.textContent = '?'
-     friendsOutput.textContent = '?'
+    characterOutput.textContent = '?'
+    environmentOutput.textContent = '?'
+    accessoriesOutput.textContent = '?'
+    friendsOutput.textContent = '?'
+})
+
+confirmBtn.addEventListener('click', () => {
+    if (characterOutput.textContent != '?' && environmentOutput.textContent != '?' && accessoriesOutput.textContent != '?' && friendsOutput.textContent != '?') {
+        const resultOutput = `${characterOutput.textContent} || ${environmentOutput.textContent} || ${accessoriesOutput.textContent} || ${friendsOutput.textContent}`
+        historyOutput.innerHTML = `<div>${resultOutput}</div>` + historyOutput.innerHTML
+
+        historyStorage.unshift(resultOutput)
+        localStorage.setItem('history', JSON.stringify(historyStorage))
+    }
 })
