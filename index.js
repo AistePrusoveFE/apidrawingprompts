@@ -16,6 +16,7 @@ const environmentBtn = document.getElementById('environment')
 const accessoriesBtn = document.getElementById('accessories')
 const friendsBtn = document.getElementById('friends')
 const resetBtn = document.getElementById('reset')
+const randomizeAllBtn = document.getElementById('randomizeAll')
 
 const characterOutput = document.querySelector('.character-output')
 const environmentOutput = document.querySelector('.environment-output')
@@ -26,36 +27,69 @@ function random_item(items) {
     return items[Math.floor(Math.random() * items.length)];
 }
 
+function spinner() {
+    return '<div class="lds-circle"><div></div></div>'
+}
 
-characterBtn.addEventListener('click', () => {
-    setTimeout(() => {
+const createTimer = (cb, delay) => {
+    const id = setTimeout(cb, delay)
+    timers.push(id)
+}
+
+let timers = []
+
+const spinnerTime = 500
+
+const characterOnclick =  () => {
+    characterOutput.innerHTML = spinner()
+    createTimer(() => {
         characterOutput.textContent = random_item(CHARACTERS)
-      }, 500)
+      }, spinnerTime)
+}
 
-})
-
-environmentBtn.addEventListener('click', () => {
-    setTimeout(() => {    
+const environmentOnclick = () => {
+    environmentOutput.innerHTML = spinner()
+    createTimer(() => {    
         environmentOutput.textContent = random_item(ENVIRONMENT)
-      }, 500)
+      }, spinnerTime)
 
-})
+}
 
-accessoriesBtn.addEventListener('click', () => {
-    setTimeout(() => {
+const accessoriesOnclick = () => {
+    accessoriesOutput.innerHTML = spinner()
+    createTimer(() => {
         accessoriesOutput.textContent = random_item(ACCESSORIES)
-      }, 500)
+      }, spinnerTime)
 
-})
+}
 
-friendsBtn.addEventListener('click', () => {
-    setTimeout(() => {
+const friendsOnclick = () => {
+    friendsOutput.innerHTML = spinner()
+    createTimer(() => {
         friendsOutput.textContent = random_item(FRIENDS)
-      }, 500)
+      }, spinnerTime)
 
+}
+
+
+characterBtn.addEventListener('click', characterOnclick)
+
+environmentBtn.addEventListener('click', environmentOnclick)
+
+accessoriesBtn.addEventListener('click', accessoriesOnclick)
+
+friendsBtn.addEventListener('click', friendsOnclick)
+
+randomizeAllBtn.addEventListener('click', () => {
+    characterOnclick()
+    createTimer(environmentOnclick, spinnerTime)
+    createTimer(accessoriesOnclick, spinnerTime * 2)
+    createTimer(friendsOnclick, spinnerTime * 3)
 })
 
 resetBtn.addEventListener('click', () => {
+    timers.forEach(clearTimeout)
+    timers = []
      characterOutput.textContent = '?'
      environmentOutput.textContent = '?'
      accessoriesOutput.textContent = '?'
